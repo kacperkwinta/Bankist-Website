@@ -1,12 +1,10 @@
 'use strict';
 
-///////////////////////////////////////
-// Modal window
-
 const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
+const section1 = document.querySelector(`#section--1`);
 
 const openModal = function (e) {
   e.preventDefault();
@@ -34,46 +32,7 @@ document.addEventListener('keydown', function (e) {
 ///////////////////////////////////////////////
 ///////////////////////////////////////////////
 
-const header = document.querySelector('.header');
-const message = document.createElement('div');
-message.classList.add('cookie-message');
-// message.textContent = `We use cookies for improved functionality and analytics.`;
-message.innerHTML = `
-We use 🍪 for improved functionality and analytics.
-<button class='btn btn--close--cookie'>Got it!</button>
-`;
 
-header.append(message);
-// header.prepend(message.cloneNode(true));
-// header.after(message)
-
-document
-  .querySelector('.btn--close--cookie')
-  .addEventListener('click', () => message.remove());
-
-message.style.backgroundColor = '#37383d';
-header.style.padding = `0px`;
-// console.log(getComputedStyle(message).color);
-// console.log(getComputedStyle(message).width);
-
-// CHANGING CUSTOM CSS PROPERTY
-// document.documentElement.style.setProperty(`--color-primary`, `orangered`);
-
-// Attributes
-// const logo = document.querySelector(`.nav__logo`);
-// console.log(logo.alt);
-// console.log(logo.src);
-// console.log(logo.className);
-// logo.alt = 'Beautiful minimalist logo!';
-
-// non-standard
-// console.log(logo.designer);
-// console.log(logo.getAttribute(`designer`));
-// logo.setAttribute(`company`, `Pitos Company`);
-
-// const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1));
-// const randomColor = () =>
-//   `rgb(${randomInt(0, 255)},${randomInt(0, 255)},${randomInt(0, 255)})`;
 
 ///////////////////
 // SMOOTH SCROLLING
@@ -147,3 +106,33 @@ const handleHover = function (e) {
 
 nav.addEventListener(`mouseover`, handleHover.bind(0.5));
 nav.addEventListener(`mouseout`, handleHover.bind(1));
+
+// sticky nav
+// const initialCoords = section1.getBoundingClientRect();
+// console.log(initialCoords);
+// window.addEventListener('scroll', function () {
+//   if (this.window.scrollY > initialCoords.top) {
+//     nav.classList.add(`sticky`);
+//   } else {
+//     nav.classList.remove(`stick`);
+//   }
+// });
+
+const header = document.querySelector('.header');
+const navHeight = nav.getBoundingClientRect()
+const stickyNav = function (entries) {
+  const [entry] = entries;
+  console.log(entry);
+
+  if (!entry.isIntersecting) {
+    nav.classList.add(`sticky`);
+  } else {
+    nav.classList.remove(`sticky`);
+  }
+};
+const headerObserver = new IntersectionObserver(stickyNav, {
+  root: null,
+  threshold: 0,
+  rootMargin: `-${navHeight.height}px`,
+});
+headerObserver.observe(header);
