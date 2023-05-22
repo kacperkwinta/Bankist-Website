@@ -32,8 +32,6 @@ document.addEventListener('keydown', function (e) {
 ///////////////////////////////////////////////
 ///////////////////////////////////////////////
 
-
-
 ///////////////////
 // SMOOTH SCROLLING
 document.querySelector(`.nav__links`).addEventListener('click', function (e) {
@@ -108,18 +106,8 @@ nav.addEventListener(`mouseover`, handleHover.bind(0.5));
 nav.addEventListener(`mouseout`, handleHover.bind(1));
 
 // sticky nav
-// const initialCoords = section1.getBoundingClientRect();
-// console.log(initialCoords);
-// window.addEventListener('scroll', function () {
-//   if (this.window.scrollY > initialCoords.top) {
-//     nav.classList.add(`sticky`);
-//   } else {
-//     nav.classList.remove(`stick`);
-//   }
-// });
-
 const header = document.querySelector('.header');
-const navHeight = nav.getBoundingClientRect()
+const navHeight = nav.getBoundingClientRect();
 const stickyNav = function (entries) {
   const [entry] = entries;
   console.log(entry);
@@ -136,3 +124,22 @@ const headerObserver = new IntersectionObserver(stickyNav, {
   rootMargin: `-${navHeight.height}px`,
 });
 headerObserver.observe(header);
+
+// reveal sections
+const allSections = document.querySelectorAll(`.section`);
+const revealSection = function (entries, observer) {
+  const [entry] = entries;
+  console.log(entry);
+  if (!entry.isIntersecting) return;
+  entry.target.classList.remove(`section--hidden`);
+  observer.unobserve(entry.target)
+};
+
+const sectionObserver = new IntersectionObserver(revealSection, {
+  root: null,
+  threshold: 0.15,
+});
+allSections.forEach(function (section) {
+  sectionObserver.observe(section);
+  section.classList.add(`section--hidden`);
+});
